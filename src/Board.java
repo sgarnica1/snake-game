@@ -61,6 +61,19 @@ public class Board extends JPanel implements ActionListener {
   }
 
   /**
+   * @brief Restart game
+   * @return void
+   */
+  private void restartGame() {
+    initGame();
+    inGame = true;
+    rightDirection = true;
+    leftDirection = false;
+    upDirection = false;
+    downDirection = false;
+  }
+
+  /**
    * @brief Load images for UI
    * @return void
    */
@@ -141,11 +154,17 @@ public class Board extends JPanel implements ActionListener {
    */
   private void drawGameOver(Graphics g) {
     String msg = "Game Over";
+    String msg2 = "Press SPACE to restart";
     Font small = new Font("Helvetica", Font.BOLD, 14);
     FontMetrics fm = getFontMetrics(small);
     g.setColor(Color.white);
     g.setFont(small);
     g.drawString(msg, ((B_WIDTH - fm.stringWidth(msg)) / 2), (B_HEIGHT / 2));
+    // Draw message to restart game
+    small = new Font("Helvetica", Font.BOLD, 12);
+    fm = getFontMetrics(small);
+    g.setFont(small);
+    g.drawString(msg2, ((B_WIDTH - fm.stringWidth(msg2)) / 2), (B_HEIGHT / 2) + 20);
   }
 
   /**
@@ -262,6 +281,10 @@ public class Board extends JPanel implements ActionListener {
         downDirection = true;
         leftDirection = false;
         rightDirection = false;
+      }
+
+      if ((key == KeyEvent.VK_SPACE) && !inGame) {
+        restartGame();
       }
     }
   }
