@@ -33,7 +33,8 @@ public class Board extends JPanel implements ActionListener {
   private boolean rightDirection = true;
   private boolean upDirection = false;
   private boolean downDirection = false;
-  private boolean inGame = true;
+  private boolean inMenu = true;
+  private boolean inGame = false;
   private boolean inPause = false;
   private int dots;
   private int appleX, appleY;
@@ -58,7 +59,7 @@ public class Board extends JPanel implements ActionListener {
     setFocusable(true);
     setPreferredSize(new Dimension(B_WIDTH, B_HEIGHT));
     loadImages();
-    initGame();
+    initMenu();
   }
 
   /**
@@ -67,6 +68,7 @@ public class Board extends JPanel implements ActionListener {
    */
   private void restartGame() {
     initGame();
+    inMenu = false;
     inGame = true;
     rightDirection = true;
     leftDirection = false;
@@ -106,6 +108,16 @@ public class Board extends JPanel implements ActionListener {
     apple = ii.getImage();
     ii = new ImageIcon("images/head.png");
     head = ii.getImage();
+  }
+
+  /**
+   * @brief Init menu game
+   * @return void
+   */
+  private void initMenu() {
+    inMenu = true;
+    inGame = false;
+    inPause = false;
   }
 
   /**
@@ -152,6 +164,10 @@ public class Board extends JPanel implements ActionListener {
    * @return void
    */
   private void doDrawing(Graphics g) {
+    if (inMenu) {
+      drawMenu(g); // Draw menu
+    }
+
     if (inGame) {
       g.drawImage(apple, appleX, appleY, null); // Draw apple
       for (int i = 0; i < dots; i++) {
@@ -162,7 +178,9 @@ public class Board extends JPanel implements ActionListener {
         }
       }
       Toolkit.getDefaultToolkit().sync();
-    } else {
+    }
+
+    if (!inGame && !inMenu) {
       drawGameOver(g); // Draw game over
     }
 
@@ -199,6 +217,26 @@ public class Board extends JPanel implements ActionListener {
   private void drawPausedGame(Graphics g) {
     String msg = "Game Paused";
     String msg2 = "Press R to resume";
+    Font small = new Font("Helvetica", Font.BOLD, 14);
+    FontMetrics fm = getFontMetrics(small);
+    g.setColor(Color.white);
+    g.setFont(small);
+    g.drawString(msg, ((B_WIDTH - fm.stringWidth(msg)) / 2), (B_HEIGHT / 2));
+    // Draw message to restart game
+    small = new Font("Helvetica", Font.BOLD, 12);
+    fm = getFontMetrics(small);
+    g.setFont(small);
+    g.drawString(msg2, ((B_WIDTH - fm.stringWidth(msg2)) / 2), (B_HEIGHT / 2) + 20);
+  }
+
+  /**
+   * @brief Draw menu
+   * @param g
+   * @return void
+   */
+  private void drawMenu(Graphics g) {
+    String msg = "Snake Game";
+    String msg2 = "Press SPACE to start";
     Font small = new Font("Helvetica", Font.BOLD, 14);
     FontMetrics fm = getFontMetrics(small);
     g.setColor(Color.white);
@@ -337,6 +375,10 @@ public class Board extends JPanel implements ActionListener {
 
       if ((key == KeyEvent.VK_R) && inPause) {
         resumeGame();
+      }
+
+      if ((key == KeyEvent.VK_S) && inMenu) {
+        initGame();
       }
     }
   }
