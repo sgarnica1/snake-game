@@ -9,7 +9,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyAdapter;
-import javax.swing.ImageIcon;
 import javax.swing.JPanel;
 import javax.swing.Timer;
 
@@ -52,7 +51,7 @@ public class Board extends JPanel implements ActionListener {
     setBackground(Color.black);
     setFocusable(true);
     setPreferredSize(new Dimension(Commons.B_WIDTH, Commons.B_HEIGHT));
-    loadImages();
+    initComponents();
     initMenu();
   }
 
@@ -90,18 +89,32 @@ public class Board extends JPanel implements ActionListener {
   }
 
   /**
-   * @brief Load images for UI
+   * @brief Init UI Components
+   * @return
+   */
+  private void initComponents() {
+    initSnake();
+    initApple();
+  }
+
+  /**
+   * @brief Load snake
    * @return void
    */
-  private void loadImages() {
-    ImageIcon ii;
-    // Load images from images folder
-    ii = new ImageIcon("images/dot.png");
-    dot = ii.getImage();
-    ii = new ImageIcon("images/apple.png");
-    apple = ii.getImage();
-    ii = new ImageIcon("images/head.png");
-    head = ii.getImage();
+  private void initSnake() {
+    Snake snake = new Snake();
+    head = snake.getHead();
+    dot = snake.getDot();
+
+  }
+
+  /**
+   * @brief Load apple
+   * @return void
+   */
+  private void initApple() {
+    Apple _apple = new Apple();
+    apple = _apple.getImage();
   }
 
   /**
