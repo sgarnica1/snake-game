@@ -21,15 +21,8 @@ import javax.swing.Timer;
  */
 public class Board extends JPanel implements ActionListener {
   private static final long serialVersionUID = -2104647880252821933L;
-  private static final int B_WIDTH = 300;
-  private static final int B_HEIGHT = 360;
-  private static final int NAVIGATION_HEIGHT = 20;
-  private static final int DOT_SIZE = 10;
-  private static final int ALL_DOTS = 900;
-  private static final int RAND_POS = 29;
-  private static final int DELAY = 140;
-  private final int x[] = new int[ALL_DOTS];
-  private final int y[] = new int[ALL_DOTS];
+  private final int x[] = new int[Commons.ALL_DOTS];
+  private final int y[] = new int[Commons.ALL_DOTS];
   private boolean leftDirection = false;
   private boolean rightDirection = true;
   private boolean upDirection = false;
@@ -58,7 +51,7 @@ public class Board extends JPanel implements ActionListener {
     addKeyListener(new TAdapter());
     setBackground(Color.black);
     setFocusable(true);
-    setPreferredSize(new Dimension(B_WIDTH, B_HEIGHT));
+    setPreferredSize(new Dimension(Commons.B_WIDTH, Commons.B_HEIGHT));
     loadImages();
     initMenu();
   }
@@ -128,12 +121,12 @@ public class Board extends JPanel implements ActionListener {
   private void initGame() {
     dots = 3;
     for (int i = 0; i < dots; i++) {
-      x[i] = 50 - (i * DOT_SIZE);
+      x[i] = 50 - (i * Commons.DOT_SIZE);
       y[i] = 50;
     }
     locateApple();
     // Set timer
-    timer = new Timer(DELAY, this);
+    timer = new Timer(Commons.DELAY, this);
     timer.start();
   }
 
@@ -142,10 +135,10 @@ public class Board extends JPanel implements ActionListener {
    */
   private void locateApple() {
     int aux;
-    aux = (int) (Math.random() * RAND_POS);
-    appleX = aux * DOT_SIZE; // x position of apple
-    aux = (int) (Math.random() * RAND_POS);
-    appleY = aux * DOT_SIZE; // y position of apple
+    aux = (int) (Math.random() * Commons.RAND_POS);
+    appleX = aux * Commons.DOT_SIZE; // x position of apple
+    aux = (int) (Math.random() * Commons.RAND_POS);
+    appleY = aux * Commons.DOT_SIZE; // y position of apple
   }
 
   /**
@@ -198,12 +191,12 @@ public class Board extends JPanel implements ActionListener {
     FontMetrics fm = getFontMetrics(small);
     g.setColor(Color.white);
     g.setFont(small);
-    g.drawString(msg, ((B_WIDTH - fm.stringWidth(msg)) / 2), (B_HEIGHT / 2));
+    g.drawString(msg, ((Commons.B_WIDTH - fm.stringWidth(msg)) / 2), (Commons.B_HEIGHT / 2));
     // Draw message to restart game
     small = new Font("Helvetica", Font.BOLD, 12);
     fm = getFontMetrics(small);
     g.setFont(small);
-    g.drawString(msg2, ((B_WIDTH - fm.stringWidth(msg2)) / 2), (B_HEIGHT / 2) + 20);
+    g.drawString(msg2, ((Commons.B_WIDTH - fm.stringWidth(msg2)) / 2), (Commons.B_HEIGHT / 2) + 20);
   }
 
   /**
@@ -218,12 +211,12 @@ public class Board extends JPanel implements ActionListener {
     FontMetrics fm = getFontMetrics(small);
     g.setColor(Color.white);
     g.setFont(small);
-    g.drawString(msg, ((B_WIDTH - fm.stringWidth(msg)) / 2), (B_HEIGHT / 2));
+    g.drawString(msg, ((Commons.B_WIDTH - fm.stringWidth(msg)) / 2), (Commons.B_HEIGHT / 2));
     // Draw message to restart game
     small = new Font("Helvetica", Font.BOLD, 12);
     fm = getFontMetrics(small);
     g.setFont(small);
-    g.drawString(msg2, ((B_WIDTH - fm.stringWidth(msg2)) / 2), (B_HEIGHT / 2) + 20);
+    g.drawString(msg2, ((Commons.B_WIDTH - fm.stringWidth(msg2)) / 2), (Commons.B_HEIGHT / 2) + 20);
   }
 
   /**
@@ -238,12 +231,12 @@ public class Board extends JPanel implements ActionListener {
     FontMetrics fm = getFontMetrics(small);
     g.setColor(Color.white);
     g.setFont(small);
-    g.drawString(msg, ((B_WIDTH - fm.stringWidth(msg)) / 2), (B_HEIGHT / 2));
+    g.drawString(msg, ((Commons.B_WIDTH - fm.stringWidth(msg)) / 2), (Commons.B_HEIGHT / 2));
     // Draw message to restart game
     small = new Font("Helvetica", Font.BOLD, 12);
     fm = getFontMetrics(small);
     g.setFont(small);
-    g.drawString(msg2, ((B_WIDTH - fm.stringWidth(msg2)) / 2), (B_HEIGHT / 2) + 20);
+    g.drawString(msg2, ((Commons.B_WIDTH - fm.stringWidth(msg2)) / 2), (Commons.B_HEIGHT / 2) + 20);
   }
 
   /**
@@ -253,15 +246,15 @@ public class Board extends JPanel implements ActionListener {
    */
   private void drawNavigation(Graphics g) {
     g.setColor(Color.gray);
-    g.fillRect(0, B_HEIGHT - NAVIGATION_HEIGHT, B_WIDTH, NAVIGATION_HEIGHT);
+    g.fillRect(0, Commons.B_HEIGHT - Commons.NAVIGATION_HEIGHT, Commons.B_WIDTH, Commons.NAVIGATION_HEIGHT);
 
     String msg = "P = Pause";
     Font small = new Font("Helvetica", Font.BOLD, 12);
     FontMetrics fm = getFontMetrics(small);
     g.setColor(Color.black);
     g.setFont(small);
-    g.drawString(msg, ((B_WIDTH - fm.stringWidth(msg)) / 2), B_HEIGHT -
-        (NAVIGATION_HEIGHT / 2) + 5);
+    g.drawString(msg, ((Commons.B_WIDTH - fm.stringWidth(msg)) / 2), Commons.B_HEIGHT -
+        (Commons.NAVIGATION_HEIGHT / 2) + 5);
   }
 
   /**
@@ -304,11 +297,11 @@ public class Board extends JPanel implements ActionListener {
       }
     }
     // Check if the snake collides with the board
-    if (x[0] >= B_WIDTH)
+    if (x[0] >= Commons.B_WIDTH)
       inGame = false;
     if (x[0] < 0)
       inGame = false;
-    if (y[0] >= B_HEIGHT - NAVIGATION_HEIGHT)
+    if (y[0] >= Commons.B_HEIGHT - Commons.NAVIGATION_HEIGHT)
       inGame = false;
     if (y[0] < 0)
       inGame = false;
@@ -328,16 +321,16 @@ public class Board extends JPanel implements ActionListener {
     }
 
     if (leftDirection)
-      x[0] -= DOT_SIZE;
+      x[0] -= Commons.DOT_SIZE;
 
     if (rightDirection)
-      x[0] += DOT_SIZE;
+      x[0] += Commons.DOT_SIZE;
 
     if (upDirection)
-      y[0] -= DOT_SIZE;
+      y[0] -= Commons.DOT_SIZE;
 
     if (downDirection)
-      y[0] += DOT_SIZE;
+      y[0] += Commons.DOT_SIZE;
   }
 
   /**
