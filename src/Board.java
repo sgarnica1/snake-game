@@ -24,7 +24,6 @@ public class Board extends JPanel implements ActionListener {
   private int dots;
   private int x[] = null;
   private int y[] = null;
-
   private boolean leftDirection = false;
   private boolean rightDirection = true;
   private boolean upDirection = false;
@@ -33,9 +32,9 @@ public class Board extends JPanel implements ActionListener {
   private boolean inGame = false;
   private boolean inPause = false;
   private int appleX, appleY;
+  private int lives = 3;
   private Timer timer;
   private Image dot, apple, head;
-
 
   /**
    * @brief Constructor
@@ -137,11 +136,8 @@ public class Board extends JPanel implements ActionListener {
    * @return void
    */
   private void initGame() {
-    // dots = 3;
-    for (int i = 0; i < dots; i++) {
-      x[i] = 50 - (i * Commons.DOT_SIZE);
-      y[i] = 50;
-    }
+    lives = 3;
+    locateSnake();
     locateApple();
     // Set timer
     timer = new Timer(Commons.DELAY, this);
@@ -157,6 +153,26 @@ public class Board extends JPanel implements ActionListener {
     appleX = aux * Commons.DOT_SIZE; // x position of apple
     aux = (int) (Math.random() * Commons.RAND_POS);
     appleY = aux * Commons.DOT_SIZE; // y position of apple
+  }
+
+  /**
+   * @brief locates snakes in the board
+   * @return void
+   */
+  private void locateSnake() {
+    for (int i = 0; i < dots; i++) {
+      x[i] = 50 - (i * Commons.DOT_SIZE);
+      y[i] = 50;
+    }
+    rightDirection = true;
+    leftDirection = false;
+    upDirection = false;
+    downDirection = false;
+  }
+
+  private void collision() {
+    lives--;
+    locateSnake();
   }
 
   /**
@@ -311,17 +327,19 @@ public class Board extends JPanel implements ActionListener {
     // Check if the snake collides with itself
     for (int i = dots; i > 0; i--) {
       if ((dots > 4) && (x[0] == x[i]) && (y[0] == y[i])) {
-        inGame = false;
+        collision();
       }
     }
     // Check if the snake collides with the board
     if (x[0] >= Commons.B_WIDTH)
-      inGame = false;
+      collision();
     if (x[0] < 0)
-      inGame = false;
+      collision();
     if (y[0] >= Commons.B_HEIGHT - Commons.NAVIGATION_HEIGHT)
-      inGame = false;
+      collision();
     if (y[0] < 0)
+      collision();
+    if (lives == 0)
       inGame = false;
     // Stop timer if the game is over
     if (!inGame)
@@ -373,7 +391,7 @@ public class Board extends JPanel implements ActionListener {
         restartGame();
       }
 
-      if ((key == KeyEvent.VK_P) && !inPause) {
+      if ((key == KeyEvent.VK_P) && !inPause && inGame) {
         pauseGame();
       }
 
