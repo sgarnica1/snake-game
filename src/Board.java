@@ -34,6 +34,7 @@ public class Board extends JPanel implements ActionListener {
   private boolean upDirection = false;
   private boolean downDirection = false;
   private boolean inGame = true;
+  private boolean paused = false;
   private int dots;
   private int appleX, appleY;
   private Timer timer;
@@ -71,6 +72,15 @@ public class Board extends JPanel implements ActionListener {
     leftDirection = false;
     upDirection = false;
     downDirection = false;
+  }
+
+  /**
+   * @brief Pause game
+   * @return void
+   */
+  private void pauseGame() {
+    paused = true;
+    timer.stop();
   }
 
   /**
@@ -285,6 +295,10 @@ public class Board extends JPanel implements ActionListener {
 
       if ((key == KeyEvent.VK_SPACE) && !inGame) {
         restartGame();
+      }
+
+      if ((key == KeyEvent.VK_P) && !paused) {
+        pauseGame();
       }
     }
   }
