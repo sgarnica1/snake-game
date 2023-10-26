@@ -20,8 +20,11 @@ import javax.swing.Timer;
  */
 public class Board extends JPanel implements ActionListener {
   private static final long serialVersionUID = -2104647880252821933L;
-  private final int x[] = new int[Commons.ALL_DOTS];
-  private final int y[] = new int[Commons.ALL_DOTS];
+  private Snake snake;
+  private int dots;
+  private int x[] = null;
+  private int y[] = null;
+
   private boolean leftDirection = false;
   private boolean rightDirection = true;
   private boolean upDirection = false;
@@ -29,10 +32,10 @@ public class Board extends JPanel implements ActionListener {
   private boolean inMenu = true;
   private boolean inGame = false;
   private boolean inPause = false;
-  private int dots;
   private int appleX, appleY;
   private Timer timer;
   private Image dot, apple, head;
+
 
   /**
    * @brief Constructor
@@ -102,10 +105,12 @@ public class Board extends JPanel implements ActionListener {
    * @return void
    */
   private void initSnake() {
-    Snake snake = new Snake();
+    snake = new Snake();
     head = snake.getHead();
-    dot = snake.getDot();
-
+    dot = snake.getBody();
+    x = snake.getXArray();
+    y = snake.getYArray();
+    dots = snake.getDots();
   }
 
   /**
@@ -132,7 +137,7 @@ public class Board extends JPanel implements ActionListener {
    * @return void
    */
   private void initGame() {
-    dots = 3;
+    // dots = 3;
     for (int i = 0; i < dots; i++) {
       x[i] = 50 - (i * Commons.DOT_SIZE);
       y[i] = 50;
@@ -280,7 +285,7 @@ public class Board extends JPanel implements ActionListener {
     if (inGame) {
       checkApple();
       checkCollision();
-      move();
+      snake.move(leftDirection, rightDirection, upDirection, downDirection);
     }
     repaint();
   }
@@ -293,7 +298,7 @@ public class Board extends JPanel implements ActionListener {
    */
   private void checkApple() {
     if (x[0] == appleX && y[0] == appleY) {
-      dots++;
+      snake.setDots(dots++);
       locateApple(); // Locate new apple
     }
   }
@@ -321,29 +326,6 @@ public class Board extends JPanel implements ActionListener {
     // Stop timer if the game is over
     if (!inGame)
       timer.stop();
-  }
-
-  /**
-   * @brief Move snake
-   * @return void
-   */
-  private void move() {
-    for (int i = dots; i > 0; i--) {
-      x[i] = x[i - 1];
-      y[i] = y[i - 1];
-    }
-
-    if (leftDirection)
-      x[0] -= Commons.DOT_SIZE;
-
-    if (rightDirection)
-      x[0] += Commons.DOT_SIZE;
-
-    if (upDirection)
-      y[0] -= Commons.DOT_SIZE;
-
-    if (downDirection)
-      y[0] += Commons.DOT_SIZE;
   }
 
   /**
