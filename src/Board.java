@@ -22,7 +22,8 @@ import javax.swing.Timer;
 public class Board extends JPanel implements ActionListener {
   private static final long serialVersionUID = -2104647880252821933L;
   private static final int B_WIDTH = 300;
-  private static final int B_HEIGHT = 300;
+  private static final int B_HEIGHT = 360;
+  private static final int NAVIGATION_HEIGHT = 20;
   private static final int DOT_SIZE = 10;
   private static final int ALL_DOTS = 900;
   private static final int RAND_POS = 29;
@@ -167,7 +168,6 @@ public class Board extends JPanel implements ActionListener {
     if (inMenu) {
       drawMenu(g); // Draw menu
     }
-
     if (inGame) {
       g.drawImage(apple, appleX, appleY, null); // Draw apple
       for (int i = 0; i < dots; i++) {
@@ -177,15 +177,12 @@ public class Board extends JPanel implements ActionListener {
           g.drawImage(dot, x[i], y[i], null); // Draw snake body
         }
       }
+      drawNavigation(g);
       Toolkit.getDefaultToolkit().sync();
     }
 
-    if (!inGame && !inMenu) {
+    if (!inGame && !inMenu && !inPause) {
       drawGameOver(g); // Draw game over
-    }
-
-    if (inPause) {
-      drawPausedGame(g); // Draw pause game
     }
   }
 
@@ -250,6 +247,24 @@ public class Board extends JPanel implements ActionListener {
   }
 
   /**
+   * @brief Draw navigation
+   * @param g
+   * @return void
+   */
+  private void drawNavigation(Graphics g) {
+    g.setColor(Color.gray);
+    g.fillRect(0, B_HEIGHT - NAVIGATION_HEIGHT, B_WIDTH, NAVIGATION_HEIGHT);
+
+    String msg = "P = Pause";
+    Font small = new Font("Helvetica", Font.BOLD, 12);
+    FontMetrics fm = getFontMetrics(small);
+    g.setColor(Color.black);
+    g.setFont(small);
+    g.drawString(msg, ((B_WIDTH - fm.stringWidth(msg)) / 2), B_HEIGHT -
+        (NAVIGATION_HEIGHT / 2) + 5);
+  }
+
+  /**
    * @brief Action performed
    * @param e ActionEvent
    * @return void
@@ -279,6 +294,7 @@ public class Board extends JPanel implements ActionListener {
 
   /**
    * @brief Check if the snake collides with itself or with the board
+   * @return void
    */
   private void checkCollision() {
     // Check if the snake collides with itself
@@ -292,7 +308,7 @@ public class Board extends JPanel implements ActionListener {
       inGame = false;
     if (x[0] < 0)
       inGame = false;
-    if (y[0] >= B_HEIGHT)
+    if (y[0] >= B_HEIGHT - NAVIGATION_HEIGHT)
       inGame = false;
     if (y[0] < 0)
       inGame = false;
