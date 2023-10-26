@@ -34,7 +34,7 @@ public class Board extends JPanel implements ActionListener {
   private boolean upDirection = false;
   private boolean downDirection = false;
   private boolean inGame = true;
-  private boolean paused = false;
+  private boolean inPause = false;
   private int dots;
   private int appleX, appleY;
   private Timer timer;
@@ -79,8 +79,18 @@ public class Board extends JPanel implements ActionListener {
    * @return void
    */
   private void pauseGame() {
-    paused = true;
+    drawPausedGame(getGraphics());
+    inPause = true;
     timer.stop();
+  }
+
+  /**
+   * @brief Resume game
+   * @return void
+   */
+  private void resumeGame() {
+    inPause = false;
+    timer.start();
   }
 
   /**
@@ -155,6 +165,10 @@ public class Board extends JPanel implements ActionListener {
     } else {
       drawGameOver(g); // Draw game over
     }
+
+    if (inPause) {
+      drawPausedGame(g); // Draw pause game
+    }
   }
 
   /**
@@ -165,6 +179,26 @@ public class Board extends JPanel implements ActionListener {
   private void drawGameOver(Graphics g) {
     String msg = "Game Over";
     String msg2 = "Press SPACE to restart";
+    Font small = new Font("Helvetica", Font.BOLD, 14);
+    FontMetrics fm = getFontMetrics(small);
+    g.setColor(Color.white);
+    g.setFont(small);
+    g.drawString(msg, ((B_WIDTH - fm.stringWidth(msg)) / 2), (B_HEIGHT / 2));
+    // Draw message to restart game
+    small = new Font("Helvetica", Font.BOLD, 12);
+    fm = getFontMetrics(small);
+    g.setFont(small);
+    g.drawString(msg2, ((B_WIDTH - fm.stringWidth(msg2)) / 2), (B_HEIGHT / 2) + 20);
+  }
+
+  /**
+   * @brief Draw inPause game
+   * @param g
+   * @return void
+   */
+  private void drawPausedGame(Graphics g) {
+    String msg = "Game Paused";
+    String msg2 = "Press R to resume";
     Font small = new Font("Helvetica", Font.BOLD, 14);
     FontMetrics fm = getFontMetrics(small);
     g.setColor(Color.white);
@@ -297,8 +331,12 @@ public class Board extends JPanel implements ActionListener {
         restartGame();
       }
 
-      if ((key == KeyEvent.VK_P) && !paused) {
+      if ((key == KeyEvent.VK_P) && !inPause) {
         pauseGame();
+      }
+
+      if ((key == KeyEvent.VK_R) && inPause) {
+        resumeGame();
       }
     }
   }
