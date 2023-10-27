@@ -3,13 +3,14 @@ import javax.swing.ImageIcon;
 
 /**
  * @brief Snake class
- * This class is used to create the snake component and move it
+ *        This class is used to create the snake component and move it
  * @file Snake.java
  * @version 1.0
  */
 public class Snake {
   private Image dot, head;
   private int dots;
+  private int speed = 10;
   private final int x[] = new int[Commons.ALL_DOTS];
   private final int y[] = new int[Commons.ALL_DOTS];
 
@@ -28,6 +29,10 @@ public class Snake {
 
   public int getDots() {
     return dots;
+  }
+
+  public int getSpeed() {
+    return speed;
   }
 
   public int[] getXArray() {
@@ -62,15 +67,12 @@ public class Snake {
     }
 
     if (leftDirection)
-      x[0] -= Commons.DOT_SIZE;
-
+      x[0] -= speed;
     if (rightDirection)
-      x[0] += Commons.DOT_SIZE;
-
+      x[0] += speed;
     if (upDirection)
-      y[0] -= Commons.DOT_SIZE;
-
+      y[0] -= speed;
     if (downDirection)
-      y[0] += Commons.DOT_SIZE;
+      y[0] += speed;
   }
 }

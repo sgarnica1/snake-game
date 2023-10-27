@@ -20,6 +20,7 @@ import javax.swing.Timer;
  */
 public class Board extends JPanel implements ActionListener {
   private static final long serialVersionUID = -2104647880252821933L;
+  private static int delay = Commons.DELAY;
   private Snake snake;
   private int dots;
   private int x[] = null;
@@ -34,6 +35,7 @@ public class Board extends JPanel implements ActionListener {
   private int appleX, appleY, strawberryX, strawberryY;
   private boolean showStrawberry = false;
   private int lives = 3;
+  private int score = 0;
   private Timer timer;
   private Image dot, head, apple, strawberry;
 
@@ -54,7 +56,6 @@ public class Board extends JPanel implements ActionListener {
     setBackground(Color.black);
     setFocusable(true);
     setPreferredSize(new Dimension(Commons.B_WIDTH, Commons.B_HEIGHT));
-    initComponents();
     initMenu();
   }
 
@@ -70,6 +71,8 @@ public class Board extends JPanel implements ActionListener {
     leftDirection = false;
     upDirection = false;
     downDirection = false;
+    delay = Commons.DELAY;
+    score = 0;
   }
 
   /**
@@ -147,11 +150,12 @@ public class Board extends JPanel implements ActionListener {
    * @return void
    */
   private void initGame() {
+    initComponents();
     lives = 3;
     locateSnake();
     locateApple();
     // Set timer
-    timer = new Timer(Commons.DELAY, this);
+    timer = new Timer(delay, this);
     timer.start();
   }
 
@@ -258,7 +262,7 @@ public class Board extends JPanel implements ActionListener {
   private void drawGameOver(Graphics g) {
     String msg = "Game Over";
     String msg2 = "Press SPACE to restart";
-    String scoreMsg = "Final Score: " + (dots - 3);
+    String scoreMsg = "Final Score: " + score;
     Font small = new Font("Helvetica", Font.BOLD, 14);
     FontMetrics fm = getFontMetrics(small);
     g.setColor(Color.green);
@@ -324,7 +328,7 @@ public class Board extends JPanel implements ActionListener {
 
     String msg = "P = Pause";
     String livesMsg = "Lives: " + lives;
-    String scoreMsg = "Score: " + (dots - 3);
+    String scoreMsg = "Score: " + score;
     Font small = new Font("Helvetica", Font.PLAIN, 14);
     g.setColor(Color.green);
     g.setFont(small);
@@ -359,6 +363,9 @@ public class Board extends JPanel implements ActionListener {
   private void checkApple() {
     if (x[0] == appleX && y[0] == appleY) {
       snake.setDots(dots++);
+      score++;
+      updateDelay();
+
       int aux = (int) (Math.random() * Commons.RAND_POS);
       showStrawberry = (aux % 3 == 0) ? true : false;
       if (showStrawberry)
@@ -378,6 +385,9 @@ public class Board extends JPanel implements ActionListener {
   private void checkStrawberry() {
     if (x[0] == strawberryX && y[0] == strawberryY) {
       snake.setDots(dots += 3);
+      score += 3;
+      updateDelay();
+
       strawberryX = 0;
       strawberryY = 0;
       locateApple();
@@ -409,6 +419,17 @@ public class Board extends JPanel implements ActionListener {
     // Stop timer if the game is over
     if (!inGame)
       timer.stop();
+  }
+
+  /**
+   * @brief Update delay
+   * @return void
+   */
+  private void updateDelay() {
+    if (delay > 60) {
+      delay -= score;
+      timer.setDelay(delay);
+    }
   }
 
   /**
