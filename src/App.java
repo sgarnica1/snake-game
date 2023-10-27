@@ -1,5 +1,6 @@
 
 /**
+ * Snake Game
  * File: App.java
  * Author: Sergio Garnica González
  * Date: 26/10/2023
