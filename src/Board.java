@@ -36,6 +36,7 @@ public class Board extends JPanel implements ActionListener {
   private boolean showStrawberry = false;
   private int lives = 3;
   private int score = 0;
+  private int bestScore = 0;
   private Timer timer;
   private Image dot, head, apple, strawberry;
 
@@ -155,6 +156,7 @@ public class Board extends JPanel implements ActionListener {
     locateSnake();
     locateApple();
     // Set timer
+    delay = Commons.DELAY;
     timer = new Timer(delay, this);
     timer.start();
   }
@@ -260,10 +262,13 @@ public class Board extends JPanel implements ActionListener {
    * @return void
    */
   private void drawGameOver(Graphics g) {
+    if (score > bestScore)
+      bestScore = score;
+
     String msg = "Game Over";
     String msg2 = "Press SPACE to restart";
-    String scoreMsg = "Final Score: " + score;
-    Font small = new Font("Helvetica", Font.BOLD, 14);
+    String scoreMsg = "Final Score: " + score + " |  Best Score: " + bestScore;
+    Font small = new Font("Helvetica", Font.BOLD, 20);
     FontMetrics fm = getFontMetrics(small);
     g.setColor(Color.green);
     g.setFont(small);
