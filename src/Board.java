@@ -31,10 +31,11 @@ public class Board extends JPanel implements ActionListener {
   private boolean inMenu = true;
   private boolean inGame = false;
   private boolean inPause = false;
-  private int appleX, appleY;
+  private int appleX, appleY, strawberryX, strawberryY;
+  private boolean showStrawberry = false;
   private int lives = 3;
   private Timer timer;
-  private Image dot, apple, head;
+  private Image dot, head, apple, strawberry;
 
   /**
    * @brief Constructor
@@ -97,6 +98,7 @@ public class Board extends JPanel implements ActionListener {
   private void initComponents() {
     initSnake();
     initApple();
+    initStrawberry();
   }
 
   /**
@@ -119,6 +121,15 @@ public class Board extends JPanel implements ActionListener {
   private void initApple() {
     Apple _apple = new Apple();
     apple = _apple.getImage();
+  }
+
+  /**
+   * @brief Load apple
+   * @return void
+   */
+  private void initStrawberry() {
+    Strawberry _strawberry = new Strawberry();
+    strawberry = _strawberry.getImage();
   }
 
   /**
@@ -158,6 +169,22 @@ public class Board extends JPanel implements ActionListener {
       appleY += 20;
     if (appleY > Commons.B_HEIGHT + Commons.NAVIGATION_HEIGHT)
       appleY -= 20;
+  }
+
+  /**
+   * @brief Locate apple in board
+   */
+  private void locateStrawberry() {
+    int aux;
+    aux = (int) (Math.random() * Commons.RAND_POS);
+    strawberryX = aux * Commons.DOT_SIZE; // x position of apple
+    aux = (int) (Math.random() * Commons.RAND_POS);
+    strawberryY = aux * Commons.DOT_SIZE; // y position of apple
+
+    if (strawberryY < Commons.NAVIGATION_HEIGHT)
+      strawberryY += 20;
+    if (strawberryY > Commons.B_HEIGHT + Commons.NAVIGATION_HEIGHT)
+      strawberryY -= 20;
   }
 
   /**
@@ -206,6 +233,7 @@ public class Board extends JPanel implements ActionListener {
     }
     if (inGame) {
       g.drawImage(apple, appleX, appleY, null); // Draw apple
+      g.drawImage(strawberry, strawberryX, strawberryY, null); // Draw strawberry
       for (int i = 0; i < dots; i++) {
         if (i == 0) {
           g.drawImage(head, x[i], y[i], null); // Draw snake head
@@ -315,6 +343,7 @@ public class Board extends JPanel implements ActionListener {
   public void actionPerformed(ActionEvent e) {
     if (inGame) {
       checkApple();
+      checkStrawberry();
       checkCollision();
       snake.move(leftDirection, rightDirection, upDirection, downDirection);
     }
@@ -330,7 +359,28 @@ public class Board extends JPanel implements ActionListener {
   private void checkApple() {
     if (x[0] == appleX && y[0] == appleY) {
       snake.setDots(dots++);
-      locateApple(); // Locate new apple
+      int aux = (int) (Math.random() * Commons.RAND_POS);
+      showStrawberry = (aux % 3 == 0) ? true : false;
+      if (showStrawberry)
+        locateStrawberry();
+      else
+        locateApple(); // Locate new apple
+    }
+  }
+
+  /**
+   * @brief Check strawberry
+   *        This method check if the snake eats the strawberry, increase the size
+   *        of
+   *        the snake and locate a new strawberry
+   * @return void
+   */
+  private void checkStrawberry() {
+    if (x[0] == strawberryX && y[0] == strawberryY) {
+      snake.setDots(dots += 3);
+      strawberryX = 0;
+      strawberryY = 0;
+      locateApple();
     }
   }
 
