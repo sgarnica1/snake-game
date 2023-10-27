@@ -1,6 +1,12 @@
 import java.awt.Image;
 import javax.swing.ImageIcon;
 
+/**
+ * @brief Snake class
+ * This class is used to create the snake component and move it
+ * @file Snake.java
+ * @version 1.0
+ */
 public class Snake {
   private Image dot, head;
   private int dots;

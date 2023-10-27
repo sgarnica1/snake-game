@@ -153,6 +153,11 @@ public class Board extends JPanel implements ActionListener {
     appleX = aux * Commons.DOT_SIZE; // x position of apple
     aux = (int) (Math.random() * Commons.RAND_POS);
     appleY = aux * Commons.DOT_SIZE; // y position of apple
+
+    if (appleY < Commons.NAVIGATION_HEIGHT)
+      appleY += 20;
+    if (appleY > Commons.B_HEIGHT + Commons.NAVIGATION_HEIGHT)
+      appleY -= 20;
   }
 
   /**
@@ -170,6 +175,10 @@ public class Board extends JPanel implements ActionListener {
     downDirection = false;
   }
 
+  /**
+   * @brief Update lives and snake after colliding
+   * @return void
+   */
   private void collision() {
     lives--;
     locateSnake();
@@ -221,16 +230,18 @@ public class Board extends JPanel implements ActionListener {
   private void drawGameOver(Graphics g) {
     String msg = "Game Over";
     String msg2 = "Press SPACE to restart";
+    String scoreMsg = "Final Score: " + (dots - 3);
     Font small = new Font("Helvetica", Font.BOLD, 14);
     FontMetrics fm = getFontMetrics(small);
-    g.setColor(Color.white);
+    g.setColor(Color.green);
     g.setFont(small);
-    g.drawString(msg, ((Commons.B_WIDTH - fm.stringWidth(msg)) / 2), (Commons.B_HEIGHT / 2));
+    g.drawString(msg, ((Commons.B_WIDTH - fm.stringWidth(msg)) / 2), (Commons.B_HEIGHT / 2) - 20);
     // Draw message to restart game
     small = new Font("Helvetica", Font.BOLD, 12);
     fm = getFontMetrics(small);
     g.setFont(small);
-    g.drawString(msg2, ((Commons.B_WIDTH - fm.stringWidth(msg2)) / 2), (Commons.B_HEIGHT / 2) + 20);
+    g.drawString(msg2, ((Commons.B_WIDTH - fm.stringWidth(msg2)) / 2), (Commons.B_HEIGHT / 2));
+    g.drawString(scoreMsg, ((Commons.B_WIDTH - fm.stringWidth(scoreMsg)) / 2), (Commons.B_HEIGHT / 2) + 20);
   }
 
   /**
@@ -261,9 +272,9 @@ public class Board extends JPanel implements ActionListener {
   private void drawMenu(Graphics g) {
     String msg = "Snake Game";
     String msg2 = "Press SPACE to start";
-    Font small = new Font("Helvetica", Font.BOLD, 14);
+    Font small = new Font("Helvetica", Font.BOLD, 18);
     FontMetrics fm = getFontMetrics(small);
-    g.setColor(Color.white);
+    g.setColor(Color.green);
     g.setFont(small);
     g.drawString(msg, ((Commons.B_WIDTH - fm.stringWidth(msg)) / 2), (Commons.B_HEIGHT / 2));
     // Draw message to restart game
@@ -279,16 +290,20 @@ public class Board extends JPanel implements ActionListener {
    * @return void
    */
   private void drawNavigation(Graphics g) {
-    g.setColor(Color.gray);
+    g.setColor(Color.darkGray);
     g.fillRect(0, Commons.B_HEIGHT - Commons.NAVIGATION_HEIGHT, Commons.B_WIDTH, Commons.NAVIGATION_HEIGHT);
+    g.fillRect(0, 0, Commons.B_WIDTH, Commons.NAVIGATION_HEIGHT);
 
     String msg = "P = Pause";
-    Font small = new Font("Helvetica", Font.BOLD, 12);
-    FontMetrics fm = getFontMetrics(small);
-    g.setColor(Color.black);
+    String livesMsg = "Lives: " + lives;
+    String scoreMsg = "Score: " + (dots - 3);
+    Font small = new Font("Helvetica", Font.PLAIN, 14);
+    g.setColor(Color.green);
     g.setFont(small);
-    g.drawString(msg, ((Commons.B_WIDTH - fm.stringWidth(msg)) / 2), Commons.B_HEIGHT -
+    g.drawString(msg, 10, Commons.B_HEIGHT -
         (Commons.NAVIGATION_HEIGHT / 2) + 5);
+    g.drawString(livesMsg, 230, 15);
+    g.drawString(scoreMsg, 10, 15);
   }
 
   /**
@@ -337,7 +352,7 @@ public class Board extends JPanel implements ActionListener {
       collision();
     if (y[0] >= Commons.B_HEIGHT - Commons.NAVIGATION_HEIGHT)
       collision();
-    if (y[0] < 0)
+    if (y[0] < Commons.NAVIGATION_HEIGHT)
       collision();
     if (lives == 0)
       inGame = false;
